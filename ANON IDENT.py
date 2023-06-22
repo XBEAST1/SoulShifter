@@ -77,36 +77,45 @@ def main_loop ():
 
     choices = input ('\n\n1.Reset MAC Address\n\n2.Random MAC Address\n\n3.Random Vendor MAC Address\n\n4.Specific MAC Address\n\n5.Specific Vendor MAC Address\n\n6.Show Current MAC Address\n\n\n\nYour Choice : ')
     choice = (choices.upper())
+
+    # Reset MAC Address
+
     if choice == ('1') or choice == ('RESET') or choice ==  ('RESETADDRESS') or choice ==  ('RESET ADDRESS') or choice == ('RESET MAC ADDRESS') or choice == ('RESETMACADDRESS'):
         os.system (f'ifconfig {iface} down')
         os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
-        os.system (f'ifconfig {iface} down')
-        os.system (f'ifconfig {iface} down')
         os.system (f'screen -d -m macchanger -p {iface}\n'*100)
         os.system (f'ifconfig {iface} up')
+        os.system ('service NetworkManager restart')
         print ('\n')
         os.system (f'macchanger -s {iface}')
         exit ()
+
+    # Random MAC Address
+
     elif choice == ('2') or choice == ('RANDOM') or choice == ('RANDOMADDRESS') or choice == ('RANDOM ADDRESS') or choice == ('RANDOM MAC ADDRESS') or choice == ('RANDOMMACADDRESS'):
         os.system (f'ifconfig {iface} down')
         os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
-        os.system (f'ifconfig {iface} down')
-        os.system (f'ifconfig {iface} down')
         os.system (f'screen -d -m macchanger -r {iface}\n'*100)
         os.system (f'ifconfig {iface} up')
+        os.system ('service NetworkManager restart')
         print ('\n')
         os.system (f'macchanger -s {iface}')
         exit ()
+
+    # Random Vendor MAC Address
+
     elif choice == ('3') or choice == ('RANDOM VENDOR') or choice == ('RANDOMVENDORADDRESS') or choice == ('RANDOM VENDOR ADDRESS') or choice == ('RANDOM VENDOR MAC ADDRESS') or choice == ('RANDOMVENDORMACADDRESS'):
         os.system (f'ifconfig {iface} down')
         os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
-        os.system (f'ifconfig {iface} down')
-        os.system (f'ifconfig {iface} down')
         os.system (f'screen -d -m macchanger -A {iface}\n'*100)
         os.system (f'ifconfig {iface} up')
+        os.system ('service NetworkManager restart')
         print ('\n')
         os.system (f'macchanger -s {iface}')
         exit ()
+
+    # Specific MAC Address
+
     elif choice == ('4') or choice == ('SPECIFIC') or choice ==  ('SPECIFIC MAC ADDRESS') or choice ==  ('SPECIFICADDRESS') or choice == ('SPECIFIC ADDRESS') or choice == ('SPECIFICMACADDRESS'):
         macspoof = input ('\nEnter MAC Address That You Want To Spoof : ')
         os.system (f'ifconfig {iface} down')
@@ -119,12 +128,21 @@ def main_loop ():
         exit ()
     elif choice == ('5') or choice == ('SPECIFIC VENDOR') or choice ==  ('SPECIFIC VENDOR MAC ADDRESS') or choice ==  ('SPECIFICVENDORADDRESS') or choice == ('SPECIFIC VENDOR ADDRESS') or choice == ('SPECIFICVENDORMACADDRESS'):
         def vendor_category_loop ():
+
+            # Vendor category selection menu
+
             vendor_choice = input ('\n\n\nSelect Vendor Category\n\n1.PC Vendors\n\n2.Mobile Vendors\n\n\n\nYour Choice: ')
             vendor_choice = (vendor_choice.upper())
             if vendor_choice == ('1') or vendor_choice == ('PC VENDORS'):
+
+                # Loop if someone type wrong number
+
                 def pc_vendor_loop():
                     global first_digits
                     global last_digits
+
+                    # PC Vendor selection menu
+
                     pc_vendor = input ('\n\n\n1.Dell\n\n2.HP\n\n3.Lenovo\n\n4.Asus\n\n5.Acer\n\n6.Intel\n\n7.Toshiba\n\n8.Sony\n\n9.Gateway\n\n10.Gigabyte\n\n11.Msi\n\n12.Asrock\n\n\n\nYour Choice: ')
                     pc_vendor = (pc_vendor.upper())
                     if pc_vendor == ('1') or pc_vendor == ('DELL'):
@@ -155,7 +173,7 @@ def main_loop ():
                         first_digits = ('00:1D:84')
                         last_digits = generate_random_mac()
                     elif pc_vendor == ('10') or pc_vendor == ('GIGABYTE'):
-                        first_digits = ('')
+                        first_digits = ('FC:AA:14')
                         last_digits = generate_random_mac()
                     elif pc_vendor == ('11') or pc_vendor == ('MSI'):
                         first_digits = ('00:16:17')
@@ -170,9 +188,14 @@ def main_loop ():
 
             elif vendor_choice == ('2') or vendor_choice == ('Mobile VENDORS'):
 
+                # Loop if someone type wrong number
+
                 def mobile_vendor_loop():
                     global first_digits
                     global last_digits
+
+                    # Mobile Vendor selection menu
+
                     mobile_vendor = input ('\n\n\n1.Samsung\n\n2.Iphone\n\n3.Huawei\n\n4.OnePlus\n\n5.Oppo\n\n6.Vivo\n\n7.Motorola\n\n8.Xiaomi\n\n9.Realme\n\n10.Sony\n\n11.HTC\n\n12.Nokia\n\n13.Lenovo\n\n14.LG\n\n\nYour Choice: ')
                     mobile_vendor = (mobile_vendor.upper())
                     if mobile_vendor == ('1') or mobile_vendor == ('SAMSUNG'):
@@ -228,7 +251,6 @@ def main_loop ():
         vendor_category_loop ()
 
         os.system (f'ifconfig {iface} down')
-
         os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
         os.system (f'screen -d -m macchanger -m {first_digits}:{last_digits} {iface}\n'*100)
         os.system (f'ifconfig {iface} up')
@@ -236,6 +258,9 @@ def main_loop ():
         print ('\n')
         os.system (f'macchanger -s {iface}')
         exit ()
+
+    # Show Current MAC Address
+
     elif choice == ('6') or choice == ('SHOW') or choice == ('SHOW CURRENT MAC ADDRESS') or choice == ('SHOWADDRESS') or choice ==  ('SHOW ADDRESS') or choice == ('SHOW MAC ADDRESS') or choice == ('SHOWCURRENTMACADDRESS') or choice == ('SHOWMACADDRESS'):
         print ('\n')
         os.system (f'macchanger -s {iface}')
