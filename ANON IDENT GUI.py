@@ -307,7 +307,7 @@ label.pack(anchor=tk.CENTER)
 label.pack(anchor=tk.NW)
 
 # Execute wifi adapter select function
-select_adapter_button = tk.Button(window, text="Select Wi-Fi Adapter", command=select_adapter)
+select_adapter_button = tk.Button(window, text="Select Network Adapter", command=select_adapter)
 select_adapter_button.pack(pady=10)
 
 # Create a label and entry for selecting the operation
