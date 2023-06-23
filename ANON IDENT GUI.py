@@ -77,6 +77,72 @@ def generate_random_mac():
     random_mac = [random.choice('0123456789ABCDEF') for _ in range(6)]
     return ':'.join([random_mac[i]+random_mac[i+1] for i in range(0, len(random_mac), 2)])
 
+# Function to reset mac address
+
+def reset_mac_address():
+    os.system(f'ifconfig {iface} down')
+    os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+    os.system(f'screen -d -m macchanger -p {iface}\n'*100)
+    os.system(f'ifconfig {iface} up')
+    os.system('service NetworkManager restart')
+    output_var.set(os.popen(f'macchanger -s {iface}').read())
+
+# Function for random mac address
+
+def random_mac_address():
+    os.system(f'ifconfig {iface} down')
+    os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+    os.system(f'screen -d -m macchanger -r {iface}\n'*100)
+    os.system(f'ifconfig {iface} up')
+    os.system('service NetworkManager restart')
+    output_var.set(os.popen(f'macchanger -s {iface}').read())
+
+# Function for random vendor mac address
+
+def random_vendor_mac_address():
+    os.system(f'ifconfig {iface} down')
+    os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+    os.system(f'screen -d -m macchanger -A {iface}\n'*100)
+    os.system(f'ifconfig {iface} up')
+    os.system('service NetworkManager restart')
+    output_var.set(os.popen(f'macchanger -s {iface}').read())
+
+# Function for specific mac address
+
+def show_specific_mac_address_input():
+    specific_window = tk.Toplevel(window)
+    specific_window.title("Enter Specific MAC Address")
+
+    specific_label = tk.Label(specific_window, text="Enter Specific MAC Address:")
+    specific_label.pack()
+
+    input_var_specific = tk.StringVar(specific_window)
+    specific_entry = tk.Entry(specific_window, textvariable=input_var_specific)
+    specific_entry.pack()
+
+    def confirm_button_click():
+        mac_address = input_var_specific.get()
+        if mac_address:
+            set_specific_mac_address(mac_address, specific_window)
+        else:
+            message_label.config(text="Please enter a MAC address.\n XX:XX:XX:XX:XX:XX")
+
+    confirm_button = tk.Button(specific_window, text="Confirm", command=confirm_button_click)
+    confirm_button.pack()
+
+    message_label = tk.Label(specific_window, text="")
+    message_label.pack()
+
+def set_specific_mac_address(mac_address, specific_window):
+    specific_window.destroy()
+
+    os.system(f'ifconfig {iface} down')
+    os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+    os.system(f'screen -d -m macchanger -m {mac_address} {iface}\n'*100)
+    os.system(f'ifconfig {iface} up')
+    os.system('service NetworkManager restart')
+    output_var.set(os.popen(f'macchanger -s {iface}').read())
+
 # Function for specific vendor mac addresses
 
 def specific_vendor_address():
@@ -177,113 +243,48 @@ def specific_vendor_address():
     os.system('service NetworkManager restart')
     output_var.set(os.popen(f'macchanger -s {iface}').read())
 
-# Specific MAC Address functions
+# Function for specific vendor mac address buttons
 
-def show_specific_mac_address_input():
-    specific_window = tk.Toplevel(window)
-    specific_window.title("Enter Specific MAC Address")
+def specific_vendor_mac_address_buttons():
+    vendor_category_label.pack()
+    vendor_category_dropdown.pack()
+    pc_vendor_label.pack()
+    pc_vendor_dropdown.pack()
+    mobile_vendor_label.pack()
+    mobile_vendor_dropdown.pack()
+    run_button.pack()
+    output_var.set("")
 
-    specific_label = tk.Label(specific_window, text="Enter Specific MAC Address:")
-    specific_label.pack()
+# Function to remove specific vendor mac address buttons
 
-    input_var_specific = tk.StringVar(specific_window)
-    specific_entry = tk.Entry(specific_window, textvariable=input_var_specific)
-    specific_entry.pack()
-
-    def confirm_button_click():
-        mac_address = input_var_specific.get()
-        if mac_address:
-            set_specific_mac_address(mac_address, specific_window)
-        else:
-            message_label.config(text="Please enter a MAC address.\n XX:XX:XX:XX:XX:XX")
-
-    confirm_button = tk.Button(specific_window, text="Confirm", command=confirm_button_click)
-    confirm_button.pack()
-
-    message_label = tk.Label(specific_window, text="")
-    message_label.pack()
-
-def set_specific_mac_address(mac_address, specific_window):
-    specific_window.destroy()
-
-    os.system(f'ifconfig {iface} down')
-    os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
-    os.system(f'screen -d -m macchanger -m {mac_address} {iface}\n'*100)
-    os.system(f'ifconfig {iface} up')
-    os.system('service NetworkManager restart')
-    output_var.set(os.popen(f'macchanger -s {iface}').read())
+def remove_specific_vendor_mac_button():
+    vendor_category_label.pack_forget()
+    vendor_category_dropdown.pack_forget()
+    pc_vendor_label.pack_forget()
+    pc_vendor_dropdown.pack_forget()
+    mobile_vendor_label.pack_forget()
+    mobile_vendor_dropdown.pack_forget()
+    run_button.pack_forget()
 
 def main_loop():
     choices = input_var.get().upper()
 
-    if choices in ['1', 'RESET', 'RESETADDRESS', 'RESET ADDRESS', 'RESET MAC ADDRESS', 'RESETMACADDRESS']:
-        os.system(f'ifconfig {iface} down')
-        os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
-        os.system(f'screen -d -m macchanger -p {iface}\n'*100)
-        os.system(f'ifconfig {iface} up')
-        os.system('service NetworkManager restart')
-        output_var.set(os.popen(f'macchanger -s {iface}').read())
-        vendor_category_label.pack_forget()
-        vendor_category_dropdown.pack_forget()
-        pc_vendor_label.pack_forget()
-        pc_vendor_dropdown.pack_forget()
-        mobile_vendor_label.pack_forget()
-        mobile_vendor_dropdown.pack_forget()
-        run_button.pack_forget()
-    elif choices in ['2', 'RANDOM', 'RANDOMADDRESS', 'RANDOM ADDRESS', 'RANDOM MAC ADDRESS', 'RANDOMMACADDRESS']:
-        os.system(f'ifconfig {iface} down')
-        os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
-        os.system(f'screen -d -m macchanger -r {iface}\n'*100)
-        os.system(f'ifconfig {iface} up')
-        os.system('service NetworkManager restart')
-        output_var.set(os.popen(f'macchanger -s {iface}').read())
-        vendor_category_label.pack_forget()
-        vendor_category_dropdown.pack_forget()
-        pc_vendor_label.pack_forget()
-        pc_vendor_dropdown.pack_forget()
-        mobile_vendor_label.pack_forget()
-        mobile_vendor_dropdown.pack_forget()
-        run_button.pack_forget()
-    elif choices in ['3', 'RANDOM VENDOR', 'RANDOMVENDORADDRESS', 'RANDOM VENDOR ADDRESS', 'RANDOM VENDOR MAC ADDRESS', 'RANDOMVENDORMACADDRESS']:
-        os.system(f'ifconfig {iface} down')
-        os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
-        os.system(f'screen -d -m macchanger -A {iface}\n'*100)
-        os.system(f'ifconfig {iface} up')
-        os.system('service NetworkManager restart')
-        output_var.set(os.popen(f'macchanger -s {iface}').read())
-        vendor_category_label.pack_forget()
-        vendor_category_dropdown.pack_forget()
-        pc_vendor_label.pack_forget()
-        pc_vendor_dropdown.pack_forget()
-        mobile_vendor_label.pack_forget()
-        mobile_vendor_dropdown.pack_forget()
-        run_button.pack_forget()
-    elif choices in ['4', 'SPECIFIC', 'SPECIFIC MAC ADDRESS', 'SPECIFICADDRESS', 'SPECIFIC ADDRESS', 'SPECIFICMACADDRESS']:
+    if choices in ['1', 'RESET MAC ADDRESS']:
+        reset_mac_address()
+        remove_specific_vendor_mac_button()
+    elif choices in ['2', 'RANDOM MAC ADDRESS']:
+        random_mac_address()
+        remove_specific_vendor_mac_button()
+    elif choices in ['3', 'RANDOM VENDOR MAC ADDRESS']:
+        random_vendor_mac_address()
+        remove_specific_vendor_mac_button()
+    elif choices in ['4', 'SPECIFIC MAC ADDRESS']:
         show_specific_mac_address_input()
-        vendor_category_label.pack_forget()
-        vendor_category_dropdown.pack_forget()
-        pc_vendor_label.pack_forget()
-        pc_vendor_dropdown.pack_forget()
-        mobile_vendor_label.pack_forget()
-        mobile_vendor_dropdown.pack_forget()
-        run_button.pack_forget()
-    elif choices in ['5', 'SPECIFIC VENDOR', 'SPECIFIC VENDOR MAC ADDRESS', 'SPECIFICVENDORADDRESS', 'SPECIFIC VENDOR ADDRESS', 'SPECIFICVENDORMACADDRESS']:
-        vendor_category_label.pack()
-        vendor_category_dropdown.pack()
-        pc_vendor_label.pack()
-        pc_vendor_dropdown.pack()
-        mobile_vendor_label.pack()
-        mobile_vendor_dropdown.pack()
-        run_button.pack()
-        output_var.set("")
+        remove_specific_vendor_mac_button()
+    elif choices in ['5', 'SPECIFIC VENDOR MAC ADDRESS']:
+        specific_vendor_mac_address_buttons()
     else:
-        vendor_category_label.pack_forget()
-        vendor_category_dropdown.pack_forget()
-        pc_vendor_label.pack_forget()
-        pc_vendor_dropdown.pack_forget()
-        mobile_vendor_label.pack_forget()
-        mobile_vendor_dropdown.pack_forget()
-        run_button.pack_forget()
+        remove_specific_vendor_mac_button()
         output_var.set("Invalid option")
 
 # Create the Tkinter window
