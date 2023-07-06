@@ -1,9 +1,12 @@
 Requirments:
 
-1.macchanger
+```apt install macchanger```
+```apt install python3```
 
-2.python3
+Usage:
 
-Tutorial : https://youtu.be/VUV4WTy3D_g
+CLI:
+```python3 SOUL-SHIFTER.py```
 
-Note : Use in Kali Linux
+GUI:
+```python3 SOUL-SHIFTER.py -G```
