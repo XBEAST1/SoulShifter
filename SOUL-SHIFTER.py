@@ -1,6 +1,7 @@
 import os
 import subprocess
 import random
+import time
 import argparse
 import tkinter as tk
 from tkinter import messagebox
@@ -20,7 +21,7 @@ def run_command_line():
         '      ░      ░ ░     ░         ░  ░         ░   ░  ░  ░ ░                      ░  ░   ░     \n'
         '                                                                                            \n'
         '                  by XBEAST  ~  Discover the world through a different lens! <3             \n'
-        '                                           v5.0                                             \n'
+        '                                           v5.1                                             \n'
         '                           Github Link: https://github.com/XBEAST1                          \n'
     )
 
@@ -95,10 +96,12 @@ def run_command_line():
 
         if choice == ('1') or choice == ('RESET') or choice ==  ('RESETADDRESS') or choice ==  ('RESET ADDRESS') or choice == ('RESET MAC ADDRESS') or choice == ('RESETMACADDRESS'):
             os.system (f'ifconfig {iface} down')
+            time.sleep(1)
             os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
+            time.sleep(1)
             os.system (f'screen -d -m macchanger -p {iface}\n'*100)
+            time.sleep(1)
             os.system (f'ifconfig {iface} up')
-            os.system ('service NetworkManager restart')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -107,10 +110,12 @@ def run_command_line():
 
         elif choice == ('2') or choice == ('RANDOM') or choice == ('RANDOMADDRESS') or choice == ('RANDOM ADDRESS') or choice == ('RANDOM MAC ADDRESS') or choice == ('RANDOMMACADDRESS'):
             os.system (f'ifconfig {iface} down')
+            time.sleep(1)
             os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
+            time.sleep(1)
             os.system (f'screen -d -m macchanger -r {iface}\n'*100)
+            time.sleep(1)
             os.system (f'ifconfig {iface} up')
-            os.system ('service NetworkManager restart')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -119,10 +124,12 @@ def run_command_line():
 
         elif choice == ('3') or choice == ('RANDOM VENDOR') or choice == ('RANDOMVENDORADDRESS') or choice == ('RANDOM VENDOR ADDRESS') or choice == ('RANDOM VENDOR MAC ADDRESS') or choice == ('RANDOMVENDORMACADDRESS'):
             os.system (f'ifconfig {iface} down')
+            time.sleep(1)
             os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
+            time.sleep(1)
             os.system (f'screen -d -m macchanger -A {iface}\n'*100)
+            time.sleep(1)
             os.system (f'ifconfig {iface} up')
-            os.system ('service NetworkManager restart')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -132,10 +139,12 @@ def run_command_line():
         elif choice == ('4') or choice == ('SPECIFIC') or choice ==  ('SPECIFIC MAC ADDRESS') or choice ==  ('SPECIFICADDRESS') or choice == ('SPECIFIC ADDRESS') or choice == ('SPECIFICMACADDRESS'):
             macspoof = input ('\nEnter MAC Address That You Want To Spoof : ')
             os.system (f'ifconfig {iface} down')
+            time.sleep(1)
             os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
+            time.sleep(1)
             os.system (f'screen -d -m macchanger -m {macspoof} {iface}\n'*100)
+            time.sleep(1)
             os.system (f'ifconfig {iface} up')
-            os.system ('service NetworkManager restart')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -264,10 +273,12 @@ def run_command_line():
             vendor_category_loop ()
 
             os.system (f'ifconfig {iface} down')
+            time.sleep(1)
             os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
+            time.sleep(1)
             os.system (f'screen -d -m macchanger -m {first_digits}:{last_digits} {iface}\n'*100)
+            time.sleep(1)
             os.system (f'ifconfig {iface} up')
-            os.system ('service NetworkManager restart')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -359,30 +370,36 @@ def run_gui():
 
     def reset_mac_address():
         os.system(f'ifconfig {iface} down')
+        time.sleep(1)
         os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+        time.sleep(1)
         os.system(f'screen -d -m macchanger -p {iface}\n'*100)
+        time.sleep(1)
         os.system(f'ifconfig {iface} up')
-        os.system('service NetworkManager restart')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for random mac address
 
     def random_mac_address():
         os.system(f'ifconfig {iface} down')
+        time.sleep(1)
         os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+        time.sleep(1)
         os.system(f'screen -d -m macchanger -r {iface}\n'*100)
+        time.sleep(1)
         os.system(f'ifconfig {iface} up')
-        os.system('service NetworkManager restart')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for random vendor mac address
 
     def random_vendor_mac_address():
         os.system(f'ifconfig {iface} down')
+        time.sleep(1)
         os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+        time.sleep(1)
         os.system(f'screen -d -m macchanger -A {iface}\n'*100)
+        time.sleep(1)
         os.system(f'ifconfig {iface} up')
-        os.system('service NetworkManager restart')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for specific mac address
@@ -415,10 +432,12 @@ def run_gui():
         specific_window.destroy()
 
         os.system(f'ifconfig {iface} down')
+        time.sleep(1)
         os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+        time.sleep(1)
         os.system(f'screen -d -m macchanger -m {mac_address} {iface}\n'*100)
+        time.sleep(1)
         os.system(f'ifconfig {iface} up')
-        os.system('service NetworkManager restart')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for specific vendor mac addresses
@@ -515,10 +534,12 @@ def run_gui():
 
         last_digits = generate_random_mac()
         os.system(f'ifconfig {iface} down')
+        time.sleep(1)
         os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+        time.sleep(1)
         os.system(f'screen -d -m macchanger -m {first_digits}:{last_digits} {iface}\n'*100)
+        time.sleep(1)
         os.system(f'ifconfig {iface} up')
-        os.system('service NetworkManager restart')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for specific vendor mac address buttons
