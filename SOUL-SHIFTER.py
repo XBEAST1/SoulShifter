@@ -21,7 +21,7 @@ def run_command_line():
         '      ░      ░ ░     ░         ░  ░         ░   ░  ░  ░ ░                      ░  ░   ░     \n'
         '                                                                                            \n'
         '                  by XBEAST  ~  Discover the world through a different lens! <3             \n'
-        '                                           v5.1                                             \n'
+        '                                           v5.2                                             \n'
         '                           Github Link: https://github.com/XBEAST1                          \n'
     )
 
@@ -102,6 +102,8 @@ def run_command_line():
             os.system (f'screen -d -m macchanger -p {iface}\n'*100)
             time.sleep(1)
             os.system (f'ifconfig {iface} up')
+            time.sleep(1)
+            os.system ('screen -d -m service NetworkManager restart')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -116,6 +118,8 @@ def run_command_line():
             os.system (f'screen -d -m macchanger -r {iface}\n'*100)
             time.sleep(1)
             os.system (f'ifconfig {iface} up')
+            time.sleep(1)
+            os.system ('screen -d -m service NetworkManager restart')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -130,6 +134,8 @@ def run_command_line():
             os.system (f'screen -d -m macchanger -A {iface}\n'*100)
             time.sleep(1)
             os.system (f'ifconfig {iface} up')
+            time.sleep(1)
+            os.system ('screen -d -m service NetworkManager restart')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -145,6 +151,8 @@ def run_command_line():
             os.system (f'screen -d -m macchanger -m {macspoof} {iface}\n'*100)
             time.sleep(1)
             os.system (f'ifconfig {iface} up')
+            time.sleep(1)
+            os.system ('screen -d -m service NetworkManager restart')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -279,6 +287,8 @@ def run_command_line():
             os.system (f'screen -d -m macchanger -m {first_digits}:{last_digits} {iface}\n'*100)
             time.sleep(1)
             os.system (f'ifconfig {iface} up')
+            time.sleep(1)
+            os.system ('screen -d -m service NetworkManager restart')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -376,6 +386,8 @@ def run_gui():
         os.system(f'screen -d -m macchanger -p {iface}\n'*100)
         time.sleep(1)
         os.system(f'ifconfig {iface} up')
+        time.sleep(1)
+        os.system ('screen -d -m service NetworkManager restart')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for random mac address
@@ -388,6 +400,8 @@ def run_gui():
         os.system(f'screen -d -m macchanger -r {iface}\n'*100)
         time.sleep(1)
         os.system(f'ifconfig {iface} up')
+        time.sleep(1)
+        os.system ('screen -d -m service NetworkManager restart')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for random vendor mac address
@@ -400,6 +414,8 @@ def run_gui():
         os.system(f'screen -d -m macchanger -A {iface}\n'*100)
         time.sleep(1)
         os.system(f'ifconfig {iface} up')
+        time.sleep(1)
+        os.system ('screen -d -m service NetworkManager restart')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for specific mac address
@@ -438,6 +454,8 @@ def run_gui():
         os.system(f'screen -d -m macchanger -m {mac_address} {iface}\n'*100)
         time.sleep(1)
         os.system(f'ifconfig {iface} up')
+        time.sleep(1)
+        os.system ('screen -d -m service NetworkManager restart')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for specific vendor mac addresses
@@ -540,6 +558,8 @@ def run_gui():
         os.system(f'screen -d -m macchanger -m {first_digits}:{last_digits} {iface}\n'*100)
         time.sleep(1)
         os.system(f'ifconfig {iface} up')
+        time.sleep(1)
+        os.system ('screen -d -m service NetworkManager restart')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for specific vendor mac address buttons
@@ -597,11 +617,11 @@ def run_gui():
            '███████╗██║   ██║██║   ██║██║         ███████╗███████║██║█████╗     ██║   █████╗  ██████╔╝\n' \
            '╚════██║██║   ██║██║   ██║██║         ╚════██║██╔══██║██║██╔══╝     ██║   ██╔══╝  ██╔══██╗\n' \
            '███████║╚██████╔╝╚██████╔╝███████╗    ███████║██║  ██║██║██║        ██║   ███████╗██║  ██║\n' \
-            '╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝    ╚══════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚══════╝╚═╝  ╚═╝\n' \
-            '                                                                                          \n' \
-            '                  by XBEAST  ~  Discover the world through a different lens! <3           \n' \
-            '                                           v5.0                                           \n' \
-            '                           Github Link: https://github.com/XBEAST1                        \n'
+           '╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝    ╚══════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚══════╝╚═╝  ╚═╝\n' \
+           '                                                                                          \n' \
+           '                  by XBEAST  ~  Discover the world through a different lens! <3           \n' \
+           '                                           v5.0                                           \n' \
+           '                           Github Link: https://github.com/XBEAST1                        \n'
 
 
     label = tk.Label(window, text=text, font=("Courier", 12))
