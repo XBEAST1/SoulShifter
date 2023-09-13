@@ -1,7 +1,7 @@
 Requirments:
 
 ```
-sudo apt install python3-termcolor && sudo apt install python3-tk && sudo apt install screen && sudo apt install macchanger && sudo apt install python3
+sudo apt install python3-termcolor && sudo apt install python3-tk && sudo apt install screen && sudo apt install macchanger && sudo apt install python3 -y
 ```
 <br>
 
