@@ -1,6 +1,8 @@
 Requirments:
 
-```apt install python3-termcolor && apt install python3-tk && apt install screen && apt install macchanger && apt install python3```
+```
+apt install python3-termcolor && apt install python3-tk && apt install screen && apt install macchanger && apt install python3
+```
 <br>
 
 Usage:
