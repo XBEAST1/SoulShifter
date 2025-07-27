@@ -3,12 +3,133 @@ import subprocess
 import random
 import time
 import argparse
+import sys
 import tkinter as tk
 from tkinter import messagebox
 from termcolor import colored
 
+def install_dependencies():
+    import os
+    import shutil
+
+    def is_installed(binary):
+        return shutil.which(binary) is not None
+
+    def has_python_module(module_name):
+        try:
+            __import__(module_name)
+            return True
+        except ImportError:
+            return False
+
+    # Determine distro
+    distro = ""
+    if os.path.exists("/etc/os-release"):
+        with open("/etc/os-release") as f:
+            for line in f:
+                if line.startswith("ID="):
+                    distro = line.strip().split("=")[1].strip('"').lower()
+                    break
+
+    to_install = []
+
+    # Check required dependencies
+    need_tk = not has_python_module("tkinter")
+    need_termcolor = not has_python_module("termcolor")
+    need_macchanger = not is_installed("macchanger")
+    need_screen = not is_installed("screen")
+
+    if distro in ["arch", "manjaro"] and shutil.which("pacman"):
+        if need_tk:
+            to_install.append("tk")
+        if need_termcolor:
+            to_install.append("python-termcolor")
+        if need_macchanger:
+            to_install.append("macchanger")
+        if need_screen:
+            to_install.append("screen")
+
+        if to_install:
+            install_cmd = f"sudo pacman -Sy --noconfirm {' '.join(to_install)}"
+            print(f"[INFO] Installing missing packages: {install_cmd}")
+            os.system(install_cmd)
+
+    elif distro in ["ubuntu", "debian", "pop", "linuxmint"] and shutil.which("apt"):
+        if need_tk:
+            to_install.append("python3-tk")
+        if need_termcolor:
+            to_install.append("python3-termcolor")
+        if need_macchanger:
+            to_install.append("macchanger")
+        if need_screen:
+            to_install.append("screen")
+
+        if to_install:
+            install_cmd = f"sudo apt update && sudo apt install -y {' '.join(to_install)}"
+            print(f"[INFO] Installing missing packages: {install_cmd}")
+            os.system(install_cmd)
+
+    elif distro in ["fedora", "rhel", "centos"] and shutil.which("dnf"):
+        if need_tk:
+            to_install.append("python3-tkinter")
+        if need_termcolor:
+            to_install.append("python3-termcolor")
+        if need_macchanger:
+            to_install.append("macchanger")
+        if need_screen:
+            to_install.append("screen")
+
+        if to_install:
+            install_cmd = f"sudo dnf install -y {' '.join(to_install)}"
+            print(f"[INFO] Installing missing packages: {install_cmd}")
+            os.system(install_cmd)
+
+    elif distro in ["opensuse", "suse", "sles"] and shutil.which("zypper"):
+        if need_tk:
+            to_install.append("python3-tk")
+        if need_termcolor:
+            to_install.append("python3-termcolor")
+        if need_macchanger:
+            to_install.append("macchanger")
+        if need_screen:
+            to_install.append("screen")
+
+        if to_install:
+            install_cmd = f"sudo zypper install -y {' '.join(to_install)}"
+            print(f"[INFO] Installing missing packages: {install_cmd}")
+            os.system(install_cmd)
+
+    elif distro == "void" and shutil.which("xbps-install"):
+        if need_tk:
+            to_install.append("python3-tkinter")
+        if need_termcolor:
+            to_install.append("python3-termcolor")
+        if need_macchanger:
+            to_install.append("macchanger")
+        if need_screen:
+            to_install.append("screen")
+
+        if to_install:
+            install_cmd = f"sudo xbps-install -y {' '.join(to_install)}"
+            print(f"[INFO] Installing missing packages: {install_cmd}")
+            os.system(install_cmd)
+
+    else:
+        print(f"[WARN] Unsupported distro '{distro}' or missing package manager.")
+        print("[INFO] Please install these packages manually if missing:")
+        if need_tk:
+            print("- tkinter")
+        if need_termcolor:
+            print("- termcolor")
+        if need_macchanger:
+            print("- macchanger")
+        if need_screen:
+            print("- screen")
+
+
 def run_command_line():
     
+    print("\n")
     title = (
         '  ██████  ▒█████   █    ██  ██▓         ██████  ██░ ██  ██▓  █████▒▄▄▄█████▓▓█████  ██▀███  \n'
         '▒██    ▒ ▒██▒  ██▒ ██  ▓██▒▓██▒       ▒██    ▒ ▓██░ ██▒▓██▒▓██   ▒ ▓  ██▒ ▓▒▓█   ▀ ▓██ ▒ ██▒\n'
@@ -21,7 +142,7 @@ def run_command_line():
         '      ░      ░ ░     ░         ░  ░         ░   ░  ░  ░ ░                      ░  ░   ░     \n'
         '                                                                                            \n'
         '                  by XBEAST  ~  Discover the world through a different lens! <3             \n'
-        '                                           v5.2                                             \n'
+        '                                           v6.0                                             \n'
         '                           Github Link: https://github.com/XBEAST1                          \n'
     )
 
@@ -103,7 +224,7 @@ def run_command_line():
             time.sleep(1)
             os.system (f'ifconfig {iface} up')
             time.sleep(1)
-            os.system ('screen -d -m service NetworkManager restart')
+            os.system ('screen -d -m systemctl restart NetworkManager')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -119,7 +240,7 @@ def run_command_line():
             time.sleep(1)
             os.system (f'ifconfig {iface} up')
             time.sleep(1)
-            os.system ('screen -d -m service NetworkManager restart')
+            os.system ('screen -d -m systemctl restart NetworkManager')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -135,7 +256,7 @@ def run_command_line():
             time.sleep(1)
             os.system (f'ifconfig {iface} up')
             time.sleep(1)
-            os.system ('screen -d -m service NetworkManager restart')
+            os.system ('screen -d -m systemctl restart NetworkManager')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -152,7 +273,7 @@ def run_command_line():
             time.sleep(1)
             os.system (f'ifconfig {iface} up')
             time.sleep(1)
-            os.system ('screen -d -m service NetworkManager restart')
+            os.system ('screen -d -m systemctl restart NetworkManager')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -282,13 +403,13 @@ def run_command_line():
 
             os.system (f'ifconfig {iface} down')
             time.sleep(1)
-            os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
+            os.system (f'screen -d -m iwconfig {iface} mode auto\n')
             time.sleep(1)
-            os.system (f'screen -d -m macchanger -m {first_digits}:{last_digits} {iface}\n'*100)
+            os.system (f'screen -d -m macchanger -m {first_digits}:{last_digits} {iface}\n')
             time.sleep(1)
             os.system (f'ifconfig {iface} up')
             time.sleep(1)
-            os.system ('screen -d -m service NetworkManager restart')
+            os.system ('screen -d -m systemctl restart NetworkManager')
             print ('\n')
             os.system (f'macchanger -s {iface}')
             exit ()
@@ -304,6 +425,16 @@ def run_command_line():
     main_loop ()
 
 def run_gui():
+
+    if os.geteuid() == 0:
+        try:
+            import tkinter as tk
+            tk.Tk().destroy()  # Try to access display
+        except tk.TclError:
+            print("\n❌ GUI can't be launched directly as root.")
+            print("✅ Run this instead:")
+            print("   xhost +SI:localuser:root && sudo python3 SOUL-SHIFTER.py -G")
+            sys.exit(1)
     
     def get_network_adapters():
         try:
@@ -333,42 +464,11 @@ def run_gui():
 
     # Function to select available wifi adapters
 
-    def select_adapter():
-        # Get the list of available Wi-Fi adapters
-        network_adapters = get_network_adapters()
-
-        if len(network_adapters) > 0:
-            # Create a new window for selecting the adapter
-            adapter_window = tk.Toplevel(window)
-            adapter_window.title("Select Wi-Fi Adapter")
-
-            # Function to confirm the selected adapter
-            def confirm_selection():
-                global iface
-                # Get the index of the selected adapter from the listbox
-                selection = adapter_listbox.curselection()
-
-                if selection:
-                    # Retrieve the selected adapter from the list of adapters
-                    iface = network_adapters[selection[0]]
-                    messagebox.showinfo("Selection", f"Selected Wi-Fi adapter: {iface}")
-                    adapter_window.destroy()
-                else:
-                    messagebox.showwarning("Warning", "No adapter selected.")
-
-            # Create a listbox to display the available adapters
-            adapter_listbox = tk.Listbox(adapter_window)
-            adapter_listbox.pack(pady=10)
-
-            # Populate the listbox with the available adapters
-            for adapter in network_adapters:
-                adapter_listbox.insert(tk.END, adapter)
-
-            # Create a button to confirm the adapter selection
-            confirm_button = tk.Button(adapter_window, text="Confirm", command=confirm_selection)
-            confirm_button.pack(pady=10)
-        else:
-            messagebox.showinfo("No Wi-Fi Adapters", "No Wi-Fi adapters found.")
+    def check_adapter_selected():
+        if not hasattr(sys.modules[__name__], 'iface') or not iface:
+            messagebox.showwarning("Warning", "Please select a network adapter first.")
+            return False
+        return True
 
     # Function to generate random MAC address
 
@@ -381,13 +481,13 @@ def run_gui():
     def reset_mac_address():
         os.system(f'ifconfig {iface} down')
         time.sleep(1)
-        os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+        os.system(f'screen -d -m iwconfig {iface} mode auto\n')
         time.sleep(1)
-        os.system(f'screen -d -m macchanger -p {iface}\n'*100)
+        os.system(f'screen -d -m macchanger -p {iface}\n')
         time.sleep(1)
         os.system(f'ifconfig {iface} up')
         time.sleep(1)
-        os.system ('screen -d -m service NetworkManager restart')
+        os.system ('screen -d -m systemctl restart NetworkManager')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for random mac address
@@ -395,13 +495,13 @@ def run_gui():
     def random_mac_address():
         os.system(f'ifconfig {iface} down')
         time.sleep(1)
-        os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+        os.system(f'screen -d -m iwconfig {iface} mode auto\n')
         time.sleep(1)
-        os.system(f'screen -d -m macchanger -r {iface}\n'*100)
+        os.system(f'screen -d -m macchanger -r {iface}\n')
         time.sleep(1)
         os.system(f'ifconfig {iface} up')
         time.sleep(1)
-        os.system ('screen -d -m service NetworkManager restart')
+        os.system ('screen -d -m systemctl restart NetworkManager')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for random vendor mac address
@@ -409,13 +509,13 @@ def run_gui():
     def random_vendor_mac_address():
         os.system(f'ifconfig {iface} down')
         time.sleep(1)
-        os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+        os.system(f'screen -d -m iwconfig {iface} mode auto\n')
         time.sleep(1)
-        os.system(f'screen -d -m macchanger -A {iface}\n'*100)
+        os.system(f'screen -d -m macchanger -A {iface}\n')
         time.sleep(1)
         os.system(f'ifconfig {iface} up')
         time.sleep(1)
-        os.system ('screen -d -m service NetworkManager restart')
+        os.system ('screen -d -m systemctl restart NetworkManager')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for specific mac address
@@ -449,13 +549,13 @@ def run_gui():
 
         os.system(f'ifconfig {iface} down')
         time.sleep(1)
-        os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+        os.system(f'screen -d -m iwconfig {iface} mode auto\n')
         time.sleep(1)
-        os.system(f'screen -d -m macchanger -m {mac_address} {iface}\n'*100)
+        os.system(f'screen -d -m macchanger -m {mac_address} {iface}\n')
         time.sleep(1)
         os.system(f'ifconfig {iface} up')
         time.sleep(1)
-        os.system ('screen -d -m service NetworkManager restart')
+        os.system ('screen -d -m systemctl restart NetworkManager')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for specific vendor mac addresses
@@ -553,29 +653,22 @@ def run_gui():
         last_digits = generate_random_mac()
         os.system(f'ifconfig {iface} down')
         time.sleep(1)
-        os.system(f'screen -d -m iwconfig {iface} mode auto\n'*10)
+        os.system(f'screen -d -m iwconfig {iface} mode auto\n')
         time.sleep(1)
-        os.system(f'screen -d -m macchanger -m {first_digits}:{last_digits} {iface}\n'*100)
+        os.system(f'screen -d -m macchanger -m {first_digits}:{last_digits} {iface}\n')
         time.sleep(1)
         os.system(f'ifconfig {iface} up')
         time.sleep(1)
-        os.system ('screen -d -m service NetworkManager restart')
+        os.system ('screen -d -m systemctl restart NetworkManager')
         output_var.set(os.popen(f'macchanger -s {iface}').read())
 
     # Function for specific vendor mac address buttons
-
     def specific_vendor_mac_address_buttons():
         vendor_category_label.pack()
         vendor_category_dropdown.pack()
-        pc_vendor_label.pack()
-        pc_vendor_dropdown.pack()
-        mobile_vendor_label.pack()
-        mobile_vendor_dropdown.pack()
-        run_button.pack()
         output_var.set("")
 
     # Function to remove specific vendor mac address buttons
-
     def remove_specific_vendor_mac_button():
         vendor_category_label.pack_forget()
         vendor_category_dropdown.pack_forget()
@@ -583,27 +676,49 @@ def run_gui():
         pc_vendor_dropdown.pack_forget()
         mobile_vendor_label.pack_forget()
         mobile_vendor_dropdown.pack_forget()
-        run_button.pack_forget()
 
+    # Automatically update UI on option select
+    def on_option_change(*args):
+        selected = input_var.get()
+        if selected == '5':
+            specific_vendor_mac_address_buttons()
+        else:
+            remove_specific_vendor_mac_button()
+
+    def on_vendor_category_change(*args):
+        category = vendor_choice_var.get().lower()
+
+        # Hide both first
+        pc_vendor_label.pack_forget()
+        pc_vendor_dropdown.pack_forget()
+        mobile_vendor_label.pack_forget()
+        mobile_vendor_dropdown.pack_forget()
+
+        if category == 'pc vendors':
+            pc_vendor_label.pack()
+            pc_vendor_dropdown.pack()
+        elif category == 'mobile vendors':
+            mobile_vendor_label.pack()
+            mobile_vendor_dropdown.pack()
+
+    # Main execution function
     def main_loop():
+        if not check_adapter_selected():
+            return
+            
         choices = input_var.get().upper()
 
         if choices in ['1', 'RESET MAC ADDRESS']:
             reset_mac_address()
-            remove_specific_vendor_mac_button()
         elif choices in ['2', 'RANDOM MAC ADDRESS']:
             random_mac_address()
-            remove_specific_vendor_mac_button()
         elif choices in ['3', 'RANDOM VENDOR MAC ADDRESS']:
             random_vendor_mac_address()
-            remove_specific_vendor_mac_button()
         elif choices in ['4', 'SPECIFIC MAC ADDRESS']:
             show_specific_mac_address_input()
-            remove_specific_vendor_mac_button()
         elif choices in ['5', 'SPECIFIC VENDOR MAC ADDRESS']:
-            specific_vendor_mac_address_buttons()
+            specific_vendor_address()
         else:
-            remove_specific_vendor_mac_button()
             output_var.set("Invalid option")
 
     # Create the Tkinter window
@@ -613,28 +728,48 @@ def run_gui():
     window.resizable(False, False)
 
     text = '███████╗ ██████╗ ██╗   ██╗██╗         ███████╗██╗  ██╗██╗███████╗████████╗███████╗██████╗\n' \
-           '██╔════╝██╔═══██╗██║   ██║██║         ██╔════╝██║  ██║██║██╔════╝╚══██╔══╝██╔════╝██╔══██╗\n' \
-           '███████╗██║   ██║██║   ██║██║         ███████╗███████║██║█████╗     ██║   █████╗  ██████╔╝\n' \
-           '╚════██║██║   ██║██║   ██║██║         ╚════██║██╔══██║██║██╔══╝     ██║   ██╔══╝  ██╔══██╗\n' \
-           '███████║╚██████╔╝╚██████╔╝███████╗    ███████║██║  ██║██║██║        ██║   ███████╗██║  ██║\n' \
-           '╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝    ╚══════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚══════╝╚═╝  ╚═╝\n' \
-           '                                                                                          \n' \
-           '                  by XBEAST  ~  Discover the world through a different lens! <3           \n' \
-           '                                           v5.0                                           \n' \
-           '                           Github Link: https://github.com/XBEAST1                        \n'
-
+        '██╔════╝██╔═══██╗██║   ██║██║         ██╔════╝██║  ██║██║██╔════╝╚══██╔══╝██╔════╝██╔══██╗\n' \
+        '███████╗██║   ██║██║   ██║██║         ███████╗███████║██║█████╗     ██║   █████╗  ██████╔╝\n' \
+        '╚════██║██║   ██║██║   ██║██║         ╚════██║██╔══██║██║██╔══╝     ██║   ██╔══╝  ██╔══██╗\n' \
+        '███████║╚██████╔╝╚██████╔╝███████╗    ███████║██║  ██║██║██║        ██║   ███████╗██║  ██║\n' \
+        '╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝    ╚══════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚══════╝╚═╝  ╚═╝\n' \
+        '                                                                                          \n' \
+        '                  by XBEAST  ~  Discover the world through a different lens! <3           \n' \
+        '                                           v6.0                                           \n' \
+        '                           Github Link: https://github.com/XBEAST1                        \n'
 
     label = tk.Label(window, text=text, font=("Courier", 12))
-    label.pack(anchor=tk.CENTER)
-
-    # Place the label at the top of the window
     label.pack(anchor=tk.NW)
 
-    # Execute wifi adapter select function
-    select_adapter_button = tk.Button(window, text="Select Network Adapter", command=select_adapter)
-    select_adapter_button.pack(pady=10)
+    # Get the list of network adapters
+    network_adapters = get_network_adapters()
+    adapter_var = tk.StringVar(window)
+    if network_adapters:
+        adapter_var.set("Select Network adapter")
+        adapter_dropdown = tk.OptionMenu(window, adapter_var, *network_adapters)
+        adapter_dropdown.pack()
+    else:
+        adapter_var.set("No adapters found")
+        adapter_dropdown = tk.OptionMenu(window, adapter_var, ["No adapters found"])
+        adapter_dropdown.pack()
+    
+    # Label to show selected adapter
+    selected_adapter_label = tk.Label(window, text="Selected Adapter: None")
+    selected_adapter_label.pack(pady=(0,10))
+    
+    # Function to update selected adapter
+    def on_adapter_change(*args):
+        global iface
+        selected = adapter_var.get()
+        if selected and selected != "Select Network adapter" and selected != "No adapters found":
+            iface = selected
+            selected_adapter_label.config(text=f"Selected Adapter: {selected}")
+        else:
+            selected_adapter_label.config(text="Selected Adapter: None")
+    
+    adapter_var.trace_add('write', on_adapter_change)
 
-    # Create a label and entry for selecting the operation
+    # Operation selection
     operation_label = tk.Label(window, text="Select Operation:")
     operation_label.pack()
 
@@ -643,6 +778,7 @@ def run_gui():
     vendor_choice_var = tk.StringVar()
     vendor_category_choices = ['PC VENDORS', 'Mobile VENDORS']
     vendor_category_dropdown = tk.OptionMenu(window, vendor_choice_var, *vendor_category_choices)
+    vendor_choice_var.trace_add('write', on_vendor_category_change)
 
     # PC Vendor Selection
     pc_vendor_label = tk.Label(window, text="PC Vendor:")
@@ -656,16 +792,13 @@ def run_gui():
     mobile_vendor_choices = ['Samsung', 'iPhone', 'Huawei', 'OnePlus', 'Oppo', 'Vivo', 'Motorola', 'Xiaomi', 'Realme', 'Sony', 'HTC', 'Nokia', 'Lenovo', 'LG']
     mobile_vendor_dropdown = tk.OptionMenu(window, mobile_vendor_var, *mobile_vendor_choices)
 
-    # Output Text
+    # Output Label
     output_var = tk.StringVar()
     output_label = tk.Label(window, textvariable=output_var)
     output_label.pack()
 
-    # Run Button
-    run_button = tk.Button(window, text="Run", command=specific_vendor_address)
-
+    # Operation input and radio buttons
     input_var = tk.StringVar(window)
-
     operations = [
         "1. Reset to Original MAC Address",
         "2. Set to Random MAC Address",
@@ -673,24 +806,28 @@ def run_gui():
         "4. Set to Specific MAC Address",
         "5. Set to Specific Vendor MAC Address"
     ]
-
     for operation in operations:
         rb = tk.Radiobutton(window, text=operation, variable=input_var, value=operation.split('.')[0])
         rb.pack(anchor=tk.W)
 
-    # Create a button to execute the operation
+    # Watch for changes in the selected operation
+    input_var.trace_add('write', on_option_change)
+    
+    # Place the Execute button at the bottom, after all other controls
     button = tk.Button(window, text="Execute", command=main_loop)
-    button.pack()
+    button.pack(pady=10)  # Add some padding for better spacing
 
-    # Create a label to display the output
+    # Final output label
     output_var = tk.StringVar(window)
     output_label = tk.Label(window, textvariable=output_var)
     output_label.pack()
 
-    # Run the Tkinter event loop
+    # Start GUI loop
     window.mainloop()
 
+
 def main():
+    install_dependencies()
     parser = argparse.ArgumentParser()
     parser.add_argument('-G', '--gui', action='store_true')
     args = parser.parse_args()
